@@ -74,47 +74,17 @@
     <!-- Example row of columns -->
     <div class="row">
 
-      <div class="col-md-4">
-        <h2>Nexus 5x</h2>
-
-        <a href="/phone/">
-
-          <img src="static/iphone7.webp" width="180">
-
+      {%for smartphone in smartphones%}
+        <div class="col-md-4">
+        <h2>{{smartphone.name}}</h2>
+        <a href="/phone/{{smartphone.slug}}">
+          <img src="{{smartphone.image.url}}" width="180">
         </a>
-
         <form>
           <input type="submit" class="btn btn-secondary" value="Добавить в корзину »">
         </form>
       </div>
-
-      <div class="col-md-4">
-        <h2>iPhone 7</h2>
-
-        <a href="/phone/">
-
-          <img src="./static/iphone7.webp" width="180">
-
-        </a>
-
-        <form>
-          <input type="submit" class="btn btn-secondary" value="Добавить в корзину »">
-        </form>
-      </div>
-
-      <div class="col-md-4">
-        <h2>Pixel 2</h2>
-
-        <a href="/phone/">
-
-          <img src="/static/iphone7.webp" width="180">
-          <img src="/media/iphone7.webp" width="180">
-        </a>
-
-        <form>
-          <input type="submit" class="btn btn-secondary" value="Добавить в корзину »">
-        </form>
-      </div>
+      {%endfor%}
 
     </div>
   </div> <!-- /container -->

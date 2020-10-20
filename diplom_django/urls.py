@@ -27,7 +27,7 @@ urlpatterns = [
     path(r'cart/', cart, name='cart'),
     path(r'smartphones/', smartphones, name='smartphones'),
     path(r'empty_section/', empty_section, name='empty_section'),
-    path(r'phone/', phone, name='phone'),
+    path(r'phone/<slug:slug>/', phone, name='phone'),
 ] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
 
 if settings.DEBUG:

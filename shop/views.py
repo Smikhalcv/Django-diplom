@@ -6,7 +6,11 @@ from shop.models import Good
 
 def main(request):
     template = 'index.html'
-    return render(request, template)
+    smartphones = Good.objects.all()
+    content = {
+        'smartphones': smartphones
+    }
+    return render(request, template, content)
 
 def login(request):
     template = 'login.html'
@@ -28,9 +32,9 @@ def empty_section(request):
     template = 'empty_section.html'
     return render(request, template)
 
-def phone(request):
+def phone(request, slug):
     template = 'phone.html'
-    phone = Good.objects.get(id=1)
+    phone = Good.objects.get(slug=slug)
     context = {
         'phone_in_shop': phone
     }
