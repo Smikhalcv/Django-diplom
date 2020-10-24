@@ -6,7 +6,7 @@ from shop.models import Good
 
 def main(request):
     template = 'index.html'
-    smartphones = Good.objects.all()
+    smartphones = Good.objects.filter(type_good='phone').all()
     content = {
         'smartphones': smartphones
     }
@@ -22,7 +22,7 @@ def cart(request):
 
 def smartphones(request):
     template = 'smartphones.html'
-    smartphones = Good.objects.all()
+    smartphones = Good.objects.filter(type_good='phone').all()
     content = {
         'smartphones': smartphones
     }
