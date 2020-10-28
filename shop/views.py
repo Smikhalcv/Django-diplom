@@ -1,14 +1,20 @@
-from django.shortcuts import render
+from django.shortcuts import render, redirect, get_object_or_404
+from django.urls import reverse
 
 # Create your views here.
-from shop.models import Good
+from shop.form import ScoreForm
+from shop.models import Good, Article
 
 
 def main(request):
     template = 'index.html'
     smartphones = Good.objects.filter(type_good='phone').all()
+    article = Article.objects.last()
+    goods = article.attached_products.all()
     content = {
-        'smartphones': smartphones
+        'smartphones': smartphones,
+        'article': article,
+        'goods': goods,
     }
     return render(request, template, content)
 
@@ -35,7 +41,17 @@ def empty_section(request):
 def phone(request, slug):
     template = 'phone.html'
     phone = Good.objects.get(slug=slug)
+    form = ScoreForm().as_p()
+    #form_score = form.score
     context = {
-        'phone_in_shop': phone
+        'phone_in_shop': phone,
+        'form': form,
+        #'form_score': form_score,
     }
     return render(request, template, context)
+
+def feedback(request, slug):
+    product = get_object_or_404(Good, slug=slug)
+
+    return redirect(reverse('phones', args=[slug]))
+#     #return redirect(reverse('game', args=[int(f'{game.id}')]))

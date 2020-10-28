@@ -12,9 +12,12 @@ class User(AbstractUser):
 
 class Score(models.Model): # счётчик звёздочек для товара
     name = models.CharField(max_length=100)
+    review = models.CharField(max_length=100)
     score = models.IntegerField()
 
-
+class Article(models.Model):
+    title = models.CharField(max_length=100, verbose_name='Заголовок')
+    massage = models.CharField(max_length=100, verbose_name='Сообщение')
 
 class Good(models.Model):
     name = models.CharField(verbose_name='Название', max_length=50)
@@ -23,6 +26,11 @@ class Good(models.Model):
     description = models.TextField(null=True, blank=True)
     view_main = models.BooleanField(null=True, blank=True, unique=True)
     image = models.ImageField(null=True, blank=True, verbose_name='Изображение')
+    article = models.ManyToManyField(
+        Article,
+        related_name='attached_products',
+        through='Relationship_Article',
+    )
     review = models.ManyToManyField(
         Score,
         related_name='good',
@@ -44,11 +52,6 @@ class Good(models.Model):
     def __str__(self):
         return self.name
 
-class Article(models.Model):
-    title = models.CharField(max_length=100, verbose_name='Заголовок')
-    massage = models.CharField(max_length=100, verbose_name='Сообщение')
-    attached_products = models.ForeignKey(Good, related_name='article', on_delete=models.CASCADE)
-
 class Relationship_User(models.Model):
     user = models.ForeignKey(User, on_delete=models.CASCADE)
     good = models.ForeignKey(Good, on_delete=models.CASCADE, verbose_name='Корзина')
@@ -65,6 +68,6 @@ class Relationship_Score(models.Model):
     score = models.ForeignKey(Score, on_delete=models.CASCADE)
     good = models.ForeignKey(Good, on_delete=models.CASCADE)
 
-# class Relationship_Article(models.Model):
-#     article = models.ForeignKey(Article, on_delete=models.CASCADE)
-#     good = models.ForeignKey(Good, on_delete=models.CASCADE)
+class Relationship_Article(models.Model):
+    article = models.ForeignKey(Article, on_delete=models.CASCADE)
+    good = models.ForeignKey(Good, on_delete=models.CASCADE)

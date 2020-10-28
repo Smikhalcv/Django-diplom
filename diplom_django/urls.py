@@ -18,7 +18,7 @@ from django.urls import path, include
 from django.conf import settings
 from django.conf.urls.static import static
 
-from shop.views import main, login, cart, smartphones, empty_section, phone
+from shop.views import main, login, cart, smartphones, empty_section, phone, feedback
 
 urlpatterns = [
     path(r'admin/', admin.site.urls),
@@ -28,6 +28,7 @@ urlpatterns = [
     path(r'smartphones/', smartphones, name='smartphones'),
     path(r'empty_section/', empty_section, name='empty_section'),
     path(r'phone/<slug:slug>/', phone, name='phone'),
+    path(r'merch/1/feedback/<slug:slug>/', feedback, name='feedback')
 ] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
 
 if settings.DEBUG:
