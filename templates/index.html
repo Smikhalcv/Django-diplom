@@ -1,18 +1,20 @@
-<!DOCTYPE html>
+<!DOCTYPE html> {% load static %}
 <html lang="en" >
 <head>
   <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
 
   <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
   <title>Graduation Work</title>
-  <link rel="stylesheet" href="./static/bootstrap.min.css">
-  <link rel="stylesheet" href="./static/main.css">
+  <link rel="stylesheet" href="{% static 'bootstrap.min.css' %}">
+  <link rel="stylesheet" href="{% static 'main.css' %}">
+  {% block link %}{%endblock%}
 </head>
-<body class="" data-gr-c-s-loaded="true">
 
+<body class="" data-gr-c-s-loaded="true">
+{% block login %}
 <nav class="navbar navbar-expand-md navbar-dark fixed-top bg-dark">
-  <a class="navbar-brand" href="/">Просто магазин</a>
-  <img src="./static/logo.svg" alt="" width="42" height="42">
+  <a class="navbar-brand" href="{%url 'main'%}">Просто магазин</a>
+  <img src="{% static 'logo.svg'%}" alt="" width="42" height="42">
   <button class="navbar-toggler" type="button" data-toggle="collapse"
           data-target="#navbarsExampleDefault" aria-controls="navbarsExampleDefault"
           aria-expanded="false" aria-label="Toggle navigation">
@@ -22,7 +24,7 @@
   <div class="collapse navbar-collapse" id="navbarsExampleDefault">
     <ul class="navbar-nav mr-auto">
       <li class="nav-item active">
-        <a class="nav-link" href="/">
+        <a class="nav-link" href="{%url 'main'%}">
           Главная</a>
       </li>
 
@@ -33,100 +35,109 @@
           Гаджеты</a>
         <div class="dropdown-menu" aria-labelledby="dropdown01">
 
-          <a class="dropdown-item" href="smartphones/">
+          <a class="dropdown-item" href="{%url 'smartphones'%}">
             Сматрфоны</a>
+
 
         </div>
       </li>
 
 
       <li class="nav-item">
-        <a class="nav-link" href="/empty_section/">
+        <a class="nav-link" href="{%url 'empty_section'%}">
           Аксесcуары</a>
       </li>
 
 
     </ul>
     <a class="btn btn-outline-success my-2 my-sm-0" role="button"
-       href="cart/">
+       href="{%url 'cart'%}">
       Корзина</a>
 
-
-    <a class="btn btn-outline-success my-2 my-sm-0" role="button"
-       href="login/">
-      Войти</a>
+    {% if request.user.is_authenticated %}
+    <h2 style="color: #ffffff; padding-left: 10px; padding-right: 10px; font-size: 1.25rem;">
+      <i>{{user.get_username}}</i>
+    </h2>
+      <a class="btn btn-outline-success my-2 my-sm-0" role="button"
+       href="/logout/">
+      Выйти</a>
+    {%else%}
+      <a class="btn btn-outline-success my-2 my-sm-0" role="button"
+         href="{%url 'login'%}">
+        Войти</a>
+    {%endif%}
 
   </div>
 </nav>
 
 
 <main role="main">
-
-  <div class="jumbotron">
-    <div class="container">
-      <h1 class="display-4">Добро пожаловать на сайт просто магазина</h1>
-      <p>Лучшие мобилы только у нас:</p>
+  {%block content%}
+    <div class="jumbotron">
+      <div class="container">
+        <h1 class="display-4">Добро пожаловать на сайт просто магазина</h1>
+        <p>Лучшие мобилы только у нас:</p>
+      </div>
     </div>
-  </div>
 
 
-  <div class="container mb-5">
-    <!-- Example row of columns -->
-    <div class="row">
+    <div class="container mb-5">
+      <!-- Example row of columns -->
+      <div class="row">
 
-      {%for smartphone in smartphones%}
+        {%for smartphone in smartphones%}
+          <div class="col-md-4">
+          <h2>{{smartphone.name}}</h2>
+          <a href="/phone/{{smartphone.slug}}">
+            <img src="{{smartphone.image.url}}" width="180">
+          </a>
+          <form>
+            <input type="submit" class="btn btn-secondary" value="Добавить в корзину »">
+          </form>
+        </div>
+        {%endfor%}
+
+      </div>
+    </div> <!-- /container -->
+
+    <div class="jumbotron">
+      <div class="container">
+        <h1 class="display-4">{{article.title}}</h1>
+        <p>{{article.massage}}</p>
+      </div>
+    </div>
+
+
+    <div class="container mb-5">
+      <!-- Example row of columns -->
+      <div class="row">
+        {% for good in goods %}
         <div class="col-md-4">
-        <h2>{{smartphone.name}}</h2>
-        <a href="/phone/{{smartphone.slug}}">
-          <img src="{{smartphone.image.url}}" width="180">
-        </a>
-        <form>
-          <input type="submit" class="btn btn-secondary" value="Добавить в корзину »">
-        </form>
+          <h2>{{good.name}}</h2>
+
+          <a href="/phone/{{good.slug}}">
+
+            <img src="{{good.image.url}}" width="180">
+
+          </a>
+
+          <form>
+            <input type="submit" class="btn btn-secondary" value="Добавить в корзину »">
+          </form>
+        </div>
+        {%endfor%}
       </div>
-      {%endfor%}
-
-    </div>
-  </div> <!-- /container -->
-
-  <div class="jumbotron">
-    <div class="container">
-      <h1 class="display-4">{{article.title}}</h1>
-      <p>{{article.massage}}</p>
-    </div>
-  </div>
-
-
-  <div class="container mb-5">
-    <!-- Example row of columns -->
-    <div class="row">
-      {% for good in goods %}
-      <div class="col-md-4">
-        <h2>{{good.name}}</h2>
-
-        <a href="/phone/{{good.slug}}">
-
-          <img src="{{good.image.url}}" width="180">
-
-        </a>
-
-        <form>
-          <input type="submit" class="btn btn-secondary" value="Добавить в корзину »">
-        </form>
-      </div>
-      {%endfor%}
-    </div>
-  </div> <!-- /container -->
-
+    </div> <!-- /container -->
+  {%endblock%}
 </main>
-
+{%endblock%}
 <hr>
 <footer class="container">
   <p>© Просто магазин 2018</p>
 </footer>
 
-<script src="./static/jquery-3.3.1.slim.min.js"></script>
-<script src="./static/popper.min.js"></script>
-<script src="./static/bootstrap.min.js"></script>
+<script src="{% static 'jquery-3.3.1.slim.min.js' %}"></script>
+<script src="{% static 'popper.min.js' %}"></script>
+<script src="{% static 'bootstrap.min.js' %}"></script>
 </body>
 </html>

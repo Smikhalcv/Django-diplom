@@ -10,6 +10,10 @@ from django.utils.text import slugify
 class User(AbstractUser):
     pass
 
+    class Meta:
+        verbose_name = 'Пользователи'
+        verbose_name_plural = 'Пользователи'
+
 class Score(models.Model): # счётчик звёздочек для товара
     name = models.CharField(max_length=100)
     review = models.CharField(max_length=100)
@@ -18,6 +22,13 @@ class Score(models.Model): # счётчик звёздочек для товар
 class Article(models.Model):
     title = models.CharField(max_length=100, verbose_name='Заголовок')
     massage = models.CharField(max_length=100, verbose_name='Сообщение')
+
+    def __str__(self):
+        return self.title
+
+    class Meta:
+        verbose_name = 'Статья главной страницы'
+        verbose_name_plural = 'Статья главной страницы'
 
 class Good(models.Model):
     name = models.CharField(verbose_name='Название', max_length=50)
@@ -51,6 +62,11 @@ class Good(models.Model):
 
     def __str__(self):
         return self.name
+
+    class Meta:
+        verbose_name = 'Товар'
+        verbose_name_plural = 'Товары'
+
 
 class Relationship_User(models.Model):
     user = models.ForeignKey(User, on_delete=models.CASCADE)
