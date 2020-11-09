@@ -88,10 +88,11 @@
         {%for smartphone in smartphones%}
           <div class="col-md-4">
           <h2>{{smartphone.name}}</h2>
-          <a href="/phone/{{smartphone.slug}}">
+          <a href="{% url 'phone' smartphone.slug %}">
             <img src="{{smartphone.image.url}}" width="180">
           </a>
-          <form>
+          <form action="{% url 'add_to_cart' smartphone.slug %}" method="post">
+            {%csrf_token%}
             <input type="submit" class="btn btn-secondary" value="Добавить в корзину »">
           </form>
         </div>

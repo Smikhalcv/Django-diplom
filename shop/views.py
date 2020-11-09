@@ -3,7 +3,7 @@ from django.urls import reverse
 
 # Create your views here.
 from shop.form import ScoreForm, FormCreateUser
-from shop.models import Good, Article, Score
+from shop.models import Good, Article, Score, User, Relationship_User
 
 
 def main(request):
@@ -19,18 +19,16 @@ def main(request):
     return render(request, template, content)
 
 
-# def login(request):
-#     template = 'login.html'
-#     form = FormCreateUser()
-#     context = {
-#         'form': form,
-#     }
-#     return render(request, template, context)
-
-
 def cart(request):
-    template = 'cart.html'
-    return render(request, template)
+    content = {}
+    if not request.user.is_authenticated:
+        return redirect(reverse('login'))
+    else:
+        user = User.objects.get(username=request.user)
+        template = 'cart.html'
+        content['user'] = user
+
+    return render(request, template, content)
 
 
 def smartphones(request):
@@ -50,7 +48,7 @@ def empty_section(request):
 def phone(request, slug):
     template = 'phone.html'
     phone = Good.objects.get(slug=slug)
-    reviews = phone.review.all().order_by('-score')
+    reviews = phone.review.all().order_by('-star')
     form = ScoreForm()
     context = {
         'phone_in_shop': phone,
@@ -69,7 +67,7 @@ def feedback(request, slug):
             review = Score.objects.create(
                 name=cleaned_data['name'],
                 review=cleaned_data['review'],
-                score=cleaned_data['score']
+                star=cleaned_data['star']
             )
             product.review.add(review)
 
@@ -83,11 +81,20 @@ def login_site(request):
             pass
         return redirect('/')
     else:
-        return redirect('/login/')
+        return redirect(reverse('login'))
 
 
-def add_to_cart(request):
-    if not request.user.is_authenlicated:
-        return redirect('/login/')
+def add_to_cart(request, slug):
+    if not request.user.is_authenticated:
+        return redirect(reverse('login'))
     else:
-        pass
+        if request.method == 'POST':
+            good = Good.objects.get(slug=slug)
+            user = User.objects.get(username=request.user)
+            if good in user.cart.all():
+                relationship = Relationship_User.objects.get(good=good, user=user)
+                relationship.quantity += 1
+                relationship.save()
+            else:
+                user.cart.add(good)
+    return redirect(reverse('cart'))

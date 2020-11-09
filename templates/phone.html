@@ -11,11 +11,11 @@
       <div class="col-md-12">
         <h2>{{phone_in_shop.name}}</h2>
         <img src="{{phone_in_shop.image.url}}" alt='Phone_image' width="120">
-        <form method="post" action="/cart/">
+        <form method="post" action="{% url 'add_to_cart' phone_in_shop.slug %}">
           {% csrf_token %}
-          <input type="hidden" name="csrfmiddlewaretoken"
-                 value="N4vcBqzjoYkU7OTDuAT8hq8srpvYX44nJsswuP7e3EYg0Hq8DgxuR0eiXWbSr5RZ">
-          <input type="hidden" name="merchandise_id" value="1">
+<!--          <input type="hidden" name="csrfmiddlewaretoken"-->
+<!--                 value="N4vcBqzjoYkU7OTDuAT8hq8srpvYX44nJsswuP7e3EYg0Hq8DgxuR0eiXWbSr5RZ">-->
+<!--          <input type="hidden" name="merchandise_id" value="1">-->
           <input type="submit" class="btn btn-secondary" value="Добавить в корзину »">
         </form>
       </div>
@@ -24,15 +24,15 @@
 
     <div>
       {%for review in reviews%}
-        {%if review.score == 5%}
+        {%if review.star == 5%}
           ★★★★★
-        {%elif review.score == 4%}
+        {%elif review.star == 4%}
           ★★★★
-        {%elif review.score == 3%}
+        {%elif review.star == 3%}
           ★★★
-        {%elif review.score == 2%}
+        {%elif review.star == 2%}
           ★★
-        {%elif review.score == 1%}
+        {%elif review.star == 1%}
           ★
         {%endif%}
         <span>{{review.name}}</span>
@@ -46,7 +46,7 @@
       <div class="col-lg-6 col-md-8 col-sm-12">
         <h4>Оставте отзыв:</h4>
 
-      <form action="/feedback/{{phone_in_shop.slug}}/" method="post">
+      <form action="{% url 'feedback' phone_in_shop.slug %}" method="post">
         {%csrf_token%}
         <div class="form-group">
           <p>{{form.name.label}}</p>
@@ -57,7 +57,7 @@
           <p>{{form.review}}</p>
         </div>
         <div class="form-check-radio">
-          {{form.score}}
+          {{form.star}}
         </div>
 
         <button type="submit" value='Submit' class="btn btn-primary">Оставить</button>

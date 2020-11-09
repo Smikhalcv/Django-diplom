@@ -11,7 +11,7 @@ class ScoreForm(forms.Form):
     review = forms.CharField(label='Содержарие', widget=forms.Textarea(attrs={'rows': 3,
                                                                             'placeholder': 'Содержание',}))
     choices = ((1, 1), (2, 2), (3, 3), (4, 4), (5, 5),)
-    score = forms.IntegerField(widget=forms.RadioSelect(
+    star = forms.IntegerField(widget=forms.RadioSelect(
         attrs={'id': 'value'},
         choices=choices,
     ))

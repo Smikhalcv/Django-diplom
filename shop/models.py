@@ -3,32 +3,9 @@ from django.contrib.auth.models import AbstractUser
 from datetime import datetime
 from django.utils.timezone import timezone
 
-#Create your models here.
+# Create your models here.
 from django.utils.text import slugify
 
-
-class User(AbstractUser):
-    pass
-
-    class Meta:
-        verbose_name = 'Пользователи'
-        verbose_name_plural = 'Пользователи'
-
-class Score(models.Model): # счётчик звёздочек для товара
-    name = models.CharField(max_length=100)
-    review = models.CharField(max_length=100)
-    score = models.IntegerField()
-
-class Article(models.Model):
-    title = models.CharField(max_length=100, verbose_name='Заголовок')
-    massage = models.CharField(max_length=100, verbose_name='Сообщение')
-
-    def __str__(self):
-        return self.title
-
-    class Meta:
-        verbose_name = 'Статья главной страницы'
-        verbose_name_plural = 'Статья главной страницы'
 
 class Good(models.Model):
     name = models.CharField(verbose_name='Название', max_length=50)
@@ -37,21 +14,6 @@ class Good(models.Model):
     description = models.TextField(null=True, blank=True)
     view_main = models.BooleanField(null=True, blank=True, unique=True)
     image = models.ImageField(null=True, blank=True, verbose_name='Изображение')
-    article = models.ManyToManyField(
-        Article,
-        related_name='attached_products',
-        through='Relationship_Article',
-    )
-    review = models.ManyToManyField(
-        Score,
-        related_name='good',
-        through='Relationship_Score',
-    )
-    users = models.ManyToManyField(
-        User,
-        related_name='cart',
-        through='Relationship_User',
-    )
 
     def __init__(self, *args, **kwargs):
         try:
@@ -68,10 +30,54 @@ class Good(models.Model):
         verbose_name_plural = 'Товары'
 
 
+class Score(models.Model):  # счётчик звёздочек для товара
+    name = models.CharField(max_length=100)
+    review = models.CharField(max_length=100)
+    star = models.IntegerField()
+    good = models.ManyToManyField(
+        Good,
+        related_name='review',
+        through='Relationship_Score',
+    )
+
+
+class Article(models.Model):
+    title = models.CharField(max_length=100, verbose_name='Заголовок')
+    massage = models.CharField(max_length=100, verbose_name='Сообщение')
+    attached_products = models.ManyToManyField(
+        Good,
+        related_name='article',
+        through='Relationship_Article',
+    )
+
+    def __str__(self):
+        return self.title
+
+    class Meta:
+        verbose_name = 'Статья главной страницы'
+        verbose_name_plural = 'Статья главной страницы'
+
+
+class User(AbstractUser):
+    cart = models.ManyToManyField(
+        Good,
+        related_name='users',
+        through='Relationship_User',
+    )
+
+    def __str__(self):
+        return self.username
+
+    class Meta:
+        verbose_name = 'Пользователи'
+        verbose_name_plural = 'Пользователи'
+
+
 class Relationship_User(models.Model):
     user = models.ForeignKey(User, on_delete=models.CASCADE)
     good = models.ForeignKey(Good, on_delete=models.CASCADE, verbose_name='Корзина')
     date_add_cart = models.DateTimeField(blank=True)
+    quantity = models.IntegerField(default=1)
 
     def __init__(self, *args, **kwargs):
         try:
@@ -80,9 +86,11 @@ class Relationship_User(models.Model):
             pass
         super(Relationship_User, self).__init__(*args, **kwargs)
 
+
 class Relationship_Score(models.Model):
     score = models.ForeignKey(Score, on_delete=models.CASCADE)
     good = models.ForeignKey(Good, on_delete=models.CASCADE)
+
 
 class Relationship_Article(models.Model):
     article = models.ForeignKey(Article, on_delete=models.CASCADE)
