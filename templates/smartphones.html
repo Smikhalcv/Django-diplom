@@ -23,8 +23,24 @@
       </div>
       {% endfor %}
 
-
     </div> <!-- /container -->
 
+    <div style="display: flex; font-size: 30px; padding: 20px; justify-content: center;">
+      <span>
+        {% if smartphones.has_previous %}
+          <a class="links" href="?page=1">&laquo; Первая</a>
+          <a class="links" href="?page={{ data.previous_page_number }}">Предыдущая</a>
+        {% endif %}
+
+        <span >
+          Страница {{ smartphones.number }} из {{ smartphones.paginator.num_pages }}.
+        </span>
+
+        {% if smartphones.has_next %}
+          <a class="links" href="?page={{ data.next_page_number }}">Следующая</a>
+          <a class="links" href="?page={{ data.paginator.num_pages }}">Последняя &raquo;</a>
+        {% endif %}
+      </span>
+    </div>
   </div>
 {%endblock%}

@@ -9,10 +9,10 @@
     <div class="col-lg-6 col-md-9 col-sm-12 order-md-2 mb-4">
       <h4 class="d-flex justify-content-between align-items-center mb-3">
         <span class="text-muted">Ваша корзина</span>
-        <span class="badge badge-secondary badge-pill">{{user.cart.count}}</span>
+        <span class="badge badge-secondary badge-pill">{{goods_in_cart.count}}</span>
       </h4>
 
-      {% for item in user.relationship_user_set.all %}
+      {% for item in goods_in_cart %}
         <ul class="list-group mb-3">
 
         <li class="list-group-item d-flex justify-content-between lh-condensed">
@@ -26,7 +26,7 @@
       </ul>
       {% endfor %}
 
-      <form class="card p-2">
+      <form action="{% url 'order' user.id %}" class="card p-2">
         <button type="submit" class="btn btn-secondary">Заказать</button>
       </form>
     </div>

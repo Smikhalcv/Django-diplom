@@ -11,7 +11,7 @@
 </head>
 
 <body class="" data-gr-c-s-loaded="true">
-{% block login %}
+
 <nav class="navbar navbar-expand-md navbar-dark fixed-top bg-dark">
   <a class="navbar-brand" href="{%url 'main'%}">Просто магазин</a>
   <img src="{% static 'logo.svg'%}" alt="" width="42" height="42">
@@ -103,35 +103,53 @@
 
     <div class="jumbotron">
       <div class="container">
-        <h1 class="display-4">{{article.title}}</h1>
-        <p>{{article.massage}}</p>
+        {% for article in articles %}
+          <h1 class="display-4">{{article.title}}</h1>
+          <p>{{article.massage}}</p>
+          <div class="container mb-5">
+            <div class="row">
+              {% for good in article.attached_products.all %}
+                <div class="col-md-4">
+                  <h2>{{good.name}}</h2>
+                  <a href="{% url 'phone' good.slug %}">
+                    <img src="{{good.image.url}}" width="180">
+                  </a>
+                  <form>
+                    <input type="submit" class="btn btn-secondary" value="Добавить в корзину »">
+                 </form>
+                </div>
+              {% endfor %}
+            </div>
+          </div>
+        {% endfor %}
       </div>
     </div>
+<!--    <div class="jumbotron">-->
+<!--      <div class="container">-->
+<!--        <h1 class="display-4">{{article.title}}</h1>-->
+<!--        <p>{{article.massage}}</p>-->
+<!--      </div>-->
+<!--    </div>-->
 
-
-    <div class="container mb-5">
-      <!-- Example row of columns -->
-      <div class="row">
-        {% for good in goods %}
-        <div class="col-md-4">
-          <h2>{{good.name}}</h2>
-
-          <a href="/phone/{{good.slug}}">
-
-            <img src="{{good.image.url}}" width="180">
-
-          </a>
-
-          <form>
-            <input type="submit" class="btn btn-secondary" value="Добавить в корзину »">
-          </form>
-        </div>
-        {%endfor%}
-      </div>
-    </div> <!-- /container -->
+<!--    <div class="container mb-5">-->
+<!--      &lt;!&ndash; Example row of columns &ndash;&gt;-->
+<!--      <div class="row">-->
+<!--        {% for good in goods %}-->
+<!--        <div class="col-md-4">-->
+<!--          <h2>{{good.name}}</h2>-->
+<!--          <a href="/phone/{{good.slug}}">-->
+<!--            <img src="{{good.image.url}}" width="180">-->
+<!--          </a>-->
+<!--          <form>-->
+<!--            <input type="submit" class="btn btn-secondary" value="Добавить в корзину »">-->
+<!--          </form>-->
+<!--        </div>-->
+<!--        {%endfor%}-->
+<!--      </div>-->
+<!--    </div> &lt;!&ndash; /container &ndash;&gt;-->
   {%endblock%}
 </main>
-{%endblock%}
+
 <hr>
 <footer class="container">
   <p>© Просто магазин 2018</p>

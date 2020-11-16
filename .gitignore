@@ -2,3 +2,4 @@
 venv/
 db.sqlite3
 .idea/
+/diplom_django/secret_key.py

@@ -19,11 +19,12 @@ from django.urls import path, include
 from django.conf import settings
 from django.conf.urls.static import static
 
-from shop.views import main, cart, smartphones, empty_section, phone, feedback, login_site, add_to_cart
+from shop.views import main, cart, smartphones, empty_section, phone, feedback, add_to_cart, registration, order
 
 urlpatterns = [
     path(r'admin/', admin.site.urls),
     path(r'', main, name='main'),
+    path(r'registration/', registration, name='registration'),
     path(r'login/', LoginView.as_view(template_name='login.html'), name='login'),
     path(r'logout/', LogoutView.as_view(), name='logout'),
     path(r'cart/', cart, name='cart'),
@@ -31,8 +32,8 @@ urlpatterns = [
     path(r'empty_section/', empty_section, name='empty_section'),
     path(r'phone/<slug:slug>/', phone, name='phone'),
     path(r'feedback/<slug:slug>/', feedback, name='feedback'),
-    path(r'login_site/', login_site, name='login_site'),
-    path(r'add_to_cart/<slug:slug>', add_to_cart, name='add_to_cart'),
+    path(r'add_to_cart/<slug:slug>/', add_to_cart, name='add_to_cart'),
+    path(r'order/<id>/', order, name='order'),
 ] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
 
 if settings.DEBUG:
