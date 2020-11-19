@@ -34,10 +34,10 @@
            data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
           Гаджеты</a>
         <div class="dropdown-menu" aria-labelledby="dropdown01">
-
-          <a class="dropdown-item" href="{%url 'smartphones'%}">
-            Сматрфоны</a>
-
+          {% for gadget in gadgets %}
+            <a class="dropdown-item" href="{%url 'gadgets' gadget.id %}">
+              {{gadget}}</a>
+          {% endfor %}
 
         </div>
       </li>
