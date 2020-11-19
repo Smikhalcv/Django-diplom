@@ -26,9 +26,13 @@
       </ul>
       {% endfor %}
 
-      <form action="{% url 'order' user.id %}" class="card p-2">
-        <button type="submit" class="btn btn-secondary">Заказать</button>
-      </form>
+      {%if goods_in_cart%}
+        <form action="{% url 'order' user.id %}" class="card p-2">
+          <button type="submit" class="btn btn-secondary">Заказать</button>
+        </form>
+      {%else%}
+        <a href="{% url 'main' %}">Корзина пуста, добавьте товар в корзину</a>
+      {%endif%}
     </div>
   </div>
 

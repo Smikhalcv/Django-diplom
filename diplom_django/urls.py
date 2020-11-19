@@ -19,7 +19,8 @@ from django.urls import path, include
 from django.conf import settings
 from django.conf.urls.static import static
 
-from shop.views import main, cart, smartphones, empty_section, phone, feedback, add_to_cart, registration, order
+from shop.views import main, cart, empty_section, phone, feedback, add_to_cart, registration, order, \
+    gadgets
 
 urlpatterns = [
     path(r'admin/', admin.site.urls),
@@ -28,7 +29,7 @@ urlpatterns = [
     path(r'login/', LoginView.as_view(template_name='login.html'), name='login'),
     path(r'logout/', LogoutView.as_view(), name='logout'),
     path(r'cart/', cart, name='cart'),
-    path(r'smartphones/', smartphones, name='smartphones'),
+    path(r'gadgets/<id>', gadgets, name='gadgets'),
     path(r'empty_section/', empty_section, name='empty_section'),
     path(r'phone/<slug:slug>/', phone, name='phone'),
     path(r'feedback/<slug:slug>/', feedback, name='feedback'),

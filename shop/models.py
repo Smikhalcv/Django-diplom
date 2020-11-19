@@ -6,11 +6,26 @@ from datetime import datetime
 from django.utils.text import slugify
 
 
+class Type_Good(models.Model):
+    view = models.CharField(max_length=50, verbose_name='Тип товара')
+
+    def __str__(self):
+        return self.view
+
+    class Meta:
+        verbose_name = 'Раздел'
+        verbose_name_plural = 'Разделы'
+
+
 class Good(models.Model):
     """Модель товара"""
     name = models.CharField(verbose_name='Название', max_length=50)
     slug = models.SlugField(blank=True)
-    type_good = models.CharField(verbose_name='Тип товара', max_length=50)
+    type_good = models.ManyToManyField(
+        Type_Good,
+        related_name='goods',
+        through='Relationship_Type',
+    )
     description = models.TextField(null=True, blank=True)
     view_main = models.BooleanField(null=True, blank=True, unique=True)
     image = models.ImageField(null=True, blank=True, verbose_name='Изображение')
@@ -24,6 +39,13 @@ class Good(models.Model):
 
     def __str__(self):
         return self.name
+
+    def view(self):
+        """Выводит тип товара в админке"""
+        list_view = []
+        for item in Type_Good.objects.filter(goods=self).all():
+            list_view.append(item)
+        return list_view
 
     class Meta:
         verbose_name = 'Товар'
@@ -46,7 +68,7 @@ class Article(models.Model):
     """Статья на главное странице с привязкой товара"""
     title = models.CharField(max_length=100, verbose_name='Заголовок')
     massage = models.CharField(max_length=100, verbose_name='Сообщение')
-    date_make = models.DateField()
+    date_make = models.DateField(verbose_name='Дата создания')
     attached_products = models.ManyToManyField(
         Good,
         related_name='article',
@@ -110,9 +132,11 @@ class Relationship_Article(models.Model):
 
 
 class Order(models.Model):
+    """Модель заказов"""
     date = models.DateTimeField()
-    name_user = models.CharField(max_length=64)
+    name_user = models.CharField(max_length=64, verbose_name='Имя заказчика')
     id_user = models.IntegerField()
+    amount_goods = models.IntegerField(verbose_name='Количество товара', default=0)
     list_goods = models.ManyToManyField(
         Good,
         related_name='order',
@@ -135,6 +159,12 @@ class Order(models.Model):
 
 
 class Relationship_Order(models.Model):
+    """Связь модели заказов и товаров для указание количества единиц товара"""
     order = models.ForeignKey(Order, on_delete=models.CASCADE)
     good = models.ForeignKey(Good, on_delete=models.CASCADE)
     quantity = models.IntegerField(default=1)
+
+
+class Relationship_Type(models.Model):
+    type_good = models.ForeignKey(Type_Good, on_delete=models.CASCADE)
+    good = models.ForeignKey(Good, on_delete=models.CASCADE)
