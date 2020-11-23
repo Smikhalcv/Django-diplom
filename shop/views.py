@@ -12,20 +12,20 @@ from shop.form import ScoreForm, FormCreateUser
 from shop.models import Good, Article, Score, User, Relationship_User, Order, Relationship_Order, Type_Good
 
 
-def main(request):
+def main_page(request):
     """Передаёт на главную страницу 6 товаров типа,
     публикует статью с прикреплёнными товарами"""
     template = 'index.html'
     smartphones = list(Good.objects.all())
+    #random.shuffle(smartphones)
     gadgets = Type_Good.objects.all()
-    random.shuffle(smartphones)
     articles = Article.objects.all().order_by('-date_make')
     content = {
         'smartphones': smartphones[:6],
         'articles': articles,
         'gadgets': gadgets,
     }
-    return render(request, template, content)
+    return render(request, template_name=template, context=content)
 
 
 def cart(request):
