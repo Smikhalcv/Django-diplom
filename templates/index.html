@@ -35,10 +35,9 @@
           Гаджеты</a>
         <div class="dropdown-menu" aria-labelledby="dropdown01">
           {% for gadget in gadgets %}
-            <a class="dropdown-item" href="/gadgets/{{gadget.id}}/">
+            <a class="dropdown-item" href="{% url 'gadgets' gadget.id %}">
               {{gadget}}</a>
           {% endfor %}
-
         </div>
       </li>
 
