@@ -17,7 +17,7 @@
 ` (в этом каталоге должен находиться файл settings.py)
 * Прописать в secret_key.py `SECRET_KEY = '- секретный ключ -'`
 * Выполнить миграции для проекта `$ python3 manage.py migrate`
-* Перенести данные базы данных `$ python3 manage.py loaddata fixture.json`
+* Перенести данные базы данных `$ python3 manage.py loaddata fixtures.json`
 * Выполнить запуск проекта `$ python3 manage.py runserver`
 
 ### *Проект готов к использованию!*

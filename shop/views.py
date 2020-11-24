@@ -12,13 +12,13 @@ from shop.form import ScoreForm, FormCreateUser
 from shop.models import Good, Article, Score, User, Relationship_User, Order, Relationship_Order, Type_Good
 
 
-def main(request):
+def main_page(request):
     """Передаёт на главную страницу 6 товаров типа,
     публикует статью с прикреплёнными товарами"""
     template = 'index.html'
     smartphones = list(Good.objects.all())
-    gadgets = Type_Good.objects.all()
     random.shuffle(smartphones)
+    gadgets = Type_Good.objects.all()
     articles = Article.objects.all().order_by('-date_make')
     content = {
         'smartphones': smartphones[:6],
@@ -58,7 +58,7 @@ def gadgets(request, id):
         'smartphones': list_smartphones,
         'gadgets': gadgets,
     }
-    return render(request, template, context=content)
+    return render(request, template, content)
 
 
 def empty_section(request):
@@ -121,7 +121,7 @@ def add_to_cart(request, slug):
                 relationship.save()
             else:
                 user.cart.add(good)
-    return redirect('/')
+    return redirect(reverse('main'))
 
 
 def registration(request):

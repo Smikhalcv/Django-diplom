@@ -35,10 +35,9 @@
           Гаджеты</a>
         <div class="dropdown-menu" aria-labelledby="dropdown01">
           {% for gadget in gadgets %}
-            <a class="dropdown-item" href="{%url 'gadgets' gadget.id %}">
+            <a class="dropdown-item" href="{% url 'gadgets' gadget.id %}">
               {{gadget}}</a>
           {% endfor %}
-
         </div>
       </li>
 
@@ -59,7 +58,7 @@
       <i>{{user.get_username}}</i>
     </h2>
       <a class="btn btn-outline-success my-2 my-sm-0" role="button"
-       href="/logout/">
+       href="{%url 'logout'%}">
       Выйти</a>
     {%else%}
       <a class="btn btn-outline-success my-2 my-sm-0" role="button"
@@ -111,7 +110,7 @@
               {% for good in article.attached_products.all %}
                 <div class="col-md-4">
                   <h2>{{good.name}}</h2>
-                  <a href="{% url 'phone' good.slug %}">
+                  <a href="/phone/{{good.slug}}/">
                     <img src="{{good.image.url}}" width="180">
                   </a>
                   <form>
@@ -124,29 +123,7 @@
         {% endfor %}
       </div>
     </div>
-<!--    <div class="jumbotron">-->
-<!--      <div class="container">-->
-<!--        <h1 class="display-4">{{article.title}}</h1>-->
-<!--        <p>{{article.massage}}</p>-->
-<!--      </div>-->
-<!--    </div>-->
 
-<!--    <div class="container mb-5">-->
-<!--      &lt;!&ndash; Example row of columns &ndash;&gt;-->
-<!--      <div class="row">-->
-<!--        {% for good in goods %}-->
-<!--        <div class="col-md-4">-->
-<!--          <h2>{{good.name}}</h2>-->
-<!--          <a href="/phone/{{good.slug}}">-->
-<!--            <img src="{{good.image.url}}" width="180">-->
-<!--          </a>-->
-<!--          <form>-->
-<!--            <input type="submit" class="btn btn-secondary" value="Добавить в корзину »">-->
-<!--          </form>-->
-<!--        </div>-->
-<!--        {%endfor%}-->
-<!--      </div>-->
-<!--    </div> &lt;!&ndash; /container &ndash;&gt;-->
   {%endblock%}
 </main>
 
