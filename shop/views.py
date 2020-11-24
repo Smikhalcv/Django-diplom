@@ -17,7 +17,7 @@ def main_page(request):
     публикует статью с прикреплёнными товарами"""
     template = 'index.html'
     smartphones = list(Good.objects.all())
-    #random.shuffle(smartphones)
+    random.shuffle(smartphones)
     gadgets = Type_Good.objects.all()
     articles = Article.objects.all().order_by('-date_make')
     content = {
@@ -25,7 +25,7 @@ def main_page(request):
         'articles': articles,
         'gadgets': gadgets,
     }
-    return render(request, template_name=template, context=content)
+    return render(request, template, content)
 
 
 def cart(request):
@@ -58,7 +58,7 @@ def gadgets(request, id):
         'smartphones': list_smartphones,
         'gadgets': gadgets,
     }
-    return render(request, template, context=content)
+    return render(request, template, content)
 
 
 def empty_section(request):
@@ -121,7 +121,7 @@ def add_to_cart(request, slug):
                 relationship.save()
             else:
                 user.cart.add(good)
-    return redirect('/')
+    return redirect(reverse('main'))
 
 
 def registration(request):

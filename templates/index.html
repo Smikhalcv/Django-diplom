@@ -35,7 +35,7 @@
           Гаджеты</a>
         <div class="dropdown-menu" aria-labelledby="dropdown01">
           {% for gadget in gadgets %}
-            <a class="dropdown-item" href="{%url 'gadgets' gadget.id %}">
+            <a class="dropdown-item" href="/gadgets/{{gadget.id}}/">
               {{gadget}}</a>
           {% endfor %}
 
@@ -59,7 +59,7 @@
       <i>{{user.get_username}}</i>
     </h2>
       <a class="btn btn-outline-success my-2 my-sm-0" role="button"
-       href="/logout/">
+       href="{%url 'logout'%}">
       Выйти</a>
     {%else%}
       <a class="btn btn-outline-success my-2 my-sm-0" role="button"
@@ -88,10 +88,10 @@
         {%for smartphone in smartphones%}
           <div class="col-md-4">
           <h2>{{smartphone.name}}</h2>
-          <a href="/phone/{{smartphone.slug}}/">
+          <a href="{% url 'phone' smartphone.slug %}">
             <img src="{{smartphone.image.url}}" width="180">
           </a>
-          <form action="/add_to_cart/{{smartphone.slug}}/" method="post">
+          <form action="{% url 'add_to_cart' smartphone.slug %}" method="post">
             {%csrf_token%}
             <input type="submit" class="btn btn-secondary" value="Добавить в корзину »">
           </form>
