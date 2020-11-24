@@ -91,8 +91,6 @@ WSGI_APPLICATION = 'diplom_django.wsgi.application'
 # Database
 # https://docs.djangoproject.com/en/2.2/ref/settings/#databases
 
-db_from_env = dj-database-url.config()
-DATABASE['default'].update(db_from_env)
 
 DATABASES = {
     'default': {
@@ -149,3 +147,7 @@ STATICFILES_DIRS = [
 
 MEDIA_URL = '/media/'
 MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
+
+
+db_from_env = dj-database-url.config()
+DATABASE['default'].update(db_from_env)
