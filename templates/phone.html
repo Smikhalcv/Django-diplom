@@ -10,7 +10,7 @@
     <div class="row">
       <div class="col-md-12">
         <h2>{{phone_in_shop.name}}</h2>
-        <img src="{{phone_in_shop.image.url}}" alt='Phone_image' width="120">
+        <img src="{% static phone_in_shop.image.url %}" alt='Phone_image' width="120">
         <form method="post" action="{% url 'add_to_cart' phone_in_shop.slug %}">
           {% csrf_token %}
           <input type="submit" class="btn btn-secondary" value="Добавить в корзину »">
