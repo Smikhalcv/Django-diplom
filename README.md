@@ -13,9 +13,7 @@
 * Создать виртуальное окружение `$ python3 -m venv env`
 * Активировать виртуальное окружение `$ source env/bin/activate`
 * Установить зависимости и необходимые компоненты `$ pip install -r requirements.txt`
-* Создать в каталоге diplom_django/diplom_django файл `secret_key.py
-` (в этом каталоге должен находиться файл settings.py)
-* Прописать в secret_key.py `SECRET_KEY = '- секретный ключ -'`
+* Создать в корне проекта файл `.env` и указать в нём `SECRET_KEY = 'какой-то ключ'`
 * Выполнить миграции для проекта `$ python3 manage.py migrate`
 * Перенести данные базы данных `$ python3 manage.py loaddata fixtures.json`
 * Выполнить запуск проекта `$ python3 manage.py runserver`

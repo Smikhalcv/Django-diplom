@@ -29,5 +29,4 @@ class FormCreateUser(base_forms.UserCreationForm):
         model = User
 
     email = forms.EmailField(required=True)
-
     field_order = ['username', 'email', 'password1', 'password2']
