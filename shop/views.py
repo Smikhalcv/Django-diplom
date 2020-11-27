@@ -128,13 +128,22 @@ def registration(request):
     """Создаёт инстанс пользователя при регистрации
     в случаи успешной регистрации перенаправляет на главную страницу"""
     template = 'registration.html'
+    massage_password = '''
+    Your password must contain at least 8 characters.
+    Your password can't be a commonly used password.
+    Your password can't be entirely numeric.
+    '''
+    form = FormCreateUser()
+    context = {
+        'form': form,
+    }
     if request.method == 'POST':
         form = FormCreateUser(request.POST)
         email = request.POST.get('email')
         User = get_user_model()
         if User.objects.filter(email=email).exists():
             messages.error(request, 'Пользователь с таким Email уже существует.')
-            return redirect(reverse('registration'))
+            return render(request, template, context)
         else:
             if form.is_valid():
                 username = form.cleaned_data['username']
@@ -148,15 +157,11 @@ def registration(request):
                     return redirect(reverse('main'))
                 else:
                     messages.error(request, 'Пароли не совпадают.')
-                    return redirect(reverse('registration'))
+                    return render(request, template, context)
             else:
-                messages.error(request, 'Не корректные данные.')
-                return redirect(reverse('registration'))
+                messages.error(request, massage_password)
+                return render(request, template, context)
     else:
-        form = FormCreateUser()
-        context = {
-            'form': form,
-        }
         return render(request, template, context)
 
 

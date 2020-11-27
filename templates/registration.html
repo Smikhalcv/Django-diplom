@@ -19,7 +19,7 @@
   <img class="mb-4" src="{% static 'logo.svg' %}" alt="" width="72" height="72">
 
   {% if messages %}
-  <ul class="messages">
+  <ul class="messages" style="color:red;">
       {% for message in messages %}
       <li {% if message.tags %} class="{{ message.tags }}"{% endif %}>{{ message }}</li>
       {% endfor %}
@@ -47,7 +47,6 @@
       <br>
     {{form.password2}}
   </div>
-
   <button class="btn btn-lg btn-primary btn-block" type="submit">Регистрация</button>
   <p class="mt-5 mb-3 text-muted">© Просто магазин 2018</p>
 </form>
