@@ -9,7 +9,12 @@ from django.contrib.auth import authenticate, get_user_model, login
 
 # Create your views here.
 from shop.form import ScoreForm, FormCreateUser
-from shop.models import Good, Article, Score, User, Relationship_User, Order, Relationship_Order, Type_Good
+from shop.models import Good, Article, Score, User, RelationshipUser, Order, RelationshipOrder, TypeGood
+
+
+COUNT_GOOD_MAIN_PAGE = 6
+COUNT_GADGETS_GADGET_PAGE = 20
+COUNT_REVIEW_ABOUT_GOOD = 5
 
 
 def main_page(request):
@@ -18,10 +23,10 @@ def main_page(request):
     template = 'index.html'
     smartphones = list(Good.objects.all())
     random.shuffle(smartphones)
-    gadgets = Type_Good.objects.all()
+    gadgets = TypeGood.objects.all()
     articles = Article.objects.all().order_by('-date_make')
     content = {
-        'smartphones': smartphones[:6],
+        'smartphones': smartphones[:COUNT_GOOD_MAIN_PAGE],
         'articles': articles,
         'gadgets': gadgets,
     }
@@ -31,7 +36,7 @@ def main_page(request):
 def cart(request):
     """Сортирует товары в корзине по дате добавления,
     дата обновлется если увеличивать количество штук товара в другом представлении"""
-    gadgets = Type_Good.objects.all()
+    gadgets = TypeGood.objects.all()
     content = {
         'gadgets': gadgets,
     }
@@ -48,10 +53,10 @@ def cart(request):
 def gadgets(request, id):
     """Отображает все товары указанного типа"""
     template = 'smartphones.html'
-    gadgets = Type_Good.objects.all()
-    type_gadget = get_object_or_404(Type_Good, id=id)
+    gadgets = TypeGood.objects.all()
+    type_gadget = get_object_or_404(TypeGood, id=id)
     smartphones = list(type_gadget.goods.all())
-    paginator = Paginator(smartphones, 20)
+    paginator = Paginator(smartphones, COUNT_GADGETS_GADGET_PAGE)
     page = request.GET.get('page')
     list_smartphones = paginator.get_page(page)
     content = {
@@ -63,7 +68,7 @@ def gadgets(request, id):
 
 def empty_section(request):
     template = 'empty_section.html'
-    gadgets = Type_Good.objects.all()
+    gadgets = TypeGood.objects.all()
     content = {
         'gadgets': gadgets,
     }
@@ -73,14 +78,14 @@ def empty_section(request):
 def phone(request, slug):
     """Выводит телефон и его описание, 5 самых лучших отзывов"""
     template = 'phone.html'
-    gadgets = Type_Good.objects.all()
+    gadgets = TypeGood.objects.all()
     phone = Good.objects.get(slug=slug)
     reviews = phone.review.all().order_by('-star')
     form = ScoreForm()
     context = {
         'phone_in_shop': phone,
         'form': form,
-        'reviews': reviews[:5],
+        'reviews': reviews[:COUNT_REVIEW_ABOUT_GOOD],
         'gadgets': gadgets,
     }
     return render(request, template, context)
@@ -115,7 +120,7 @@ def add_to_cart(request, slug):
             good = Good.objects.get(slug=slug)
             user = User.objects.get(username=request.user)
             if good in user.cart.all():
-                relationship = Relationship_User.objects.get(good=good, user=user)
+                relationship = RelationshipUser.objects.get(good=good, user=user)
                 relationship.quantity += 1
                 relationship.date_add_cart = datetime.now()
                 relationship.save()
@@ -171,8 +176,8 @@ def order(request, id):
     order = Order.objects.create(name_user=user.username, id_user=user.id)
     list_goods = user.cart.all()
     for good in list_goods:
-        rel_user = Relationship_User.objects.get(good=good, user=user)
-        rel = Relationship_Order.objects.create(
+        rel_user = RelationshipUser.objects.get(good=good, user=user)
+        rel = RelationshipOrder.objects.create(
             good=good,
             order=order,
             quantity=rel_user.quantity

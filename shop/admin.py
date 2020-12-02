@@ -1,15 +1,15 @@
 from django.contrib import admin
-from shop.models import Good, User, Article, Relationship_User, Order, Relationship_Order, Relationship_Type, Type_Good
+from shop.models import Good, User, Article, RelationshipUser, Order, RelationshipOrder, RelationshipType, TypeGood
 
 
 # from django.contrib.admin.
 
 
 class RelationshipInlineType(admin.TabularInline):
-    model = Relationship_Type
+    model = RelationshipType
 
 
-@admin.register(Type_Good)
+@admin.register(TypeGood)
 class TypeAdmin(admin.ModelAdmin):
     """Администрирование разделов"""
 
@@ -17,14 +17,14 @@ class TypeAdmin(admin.ModelAdmin):
 @admin.register(Good)
 class GoodAdmin(admin.ModelAdmin):
     """Администрирование товара"""
-    list_display = ('name', 'view',)
+    list_display = ('name', 'type_good_admin',)
     inlines = [
         RelationshipInlineType
     ]
 
 
 class RelationshipInline(admin.TabularInline):
-    model = Relationship_User
+    model = RelationshipUser
     ordering = ('date_add_cart',)
 
 
@@ -41,7 +41,7 @@ class UserAdmin(admin.ModelAdmin):
 
 
 class RelationshipInlineOrder(admin.TabularInline):
-    model = Relationship_Order
+    model = RelationshipOrder
 
 
 @admin.register(Order)
