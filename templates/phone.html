@@ -28,18 +28,7 @@
 
     <div>
       {%for review in reviews%}
-        {%if review.star == 5%}
-          ★★★★★
-        {%elif review.star == 4%}
-          ★★★★
-        {%elif review.star == 3%}
-          ★★★
-        {%elif review.star == 2%}
-          ★★
-        {%elif review.star == 1%}
-          ★
-        {%endif%}
-        <span>{{review.name}}</span>
+        <span>{{review.get_star_display}} {{review.name}}</span>
         <p>{{review.review}}</p>
       {%endfor%}
     </div>

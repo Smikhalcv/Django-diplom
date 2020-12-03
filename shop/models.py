@@ -53,9 +53,16 @@ class Good(models.Model):
 
 class Score(models.Model):
     """Модель отзыва о товаре"""  # счётчик звёздочек для товара
+    STAR_CHOICES = [
+        (5, '★★★★★'),
+        (4, '★★★★'),
+        (3, '★★★'),
+        (2, '★★'),
+        (1, '★'),
+    ]
     name = models.CharField(max_length=100)
     review = models.CharField(max_length=100)
-    star = models.IntegerField()
+    star = models.IntegerField(choices=STAR_CHOICES)
     good = models.ManyToManyField(
         Good,
         related_name='review',
