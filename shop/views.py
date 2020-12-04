@@ -43,9 +43,24 @@ def cart(request):
     if not request.user.is_authenticated:
         return redirect(reverse('login'))
     else:
-        user = User.objects.get(username=request.user).relationship_user_set.all().order_by('-date_add_cart')
+        user = User.objects.get(username=request.user)
         template = 'cart.html'
-        content['goods_in_cart'] = user
+        content['goods_in_cart'] = user.relationshipuser_set.all().order_by('-date_add_cart')
+    parametr = request.GET.get('parametr')
+    item = request.GET.get('item')
+    if parametr and item:
+        good = RelationshipUser.objects.get(user=user, good=Good.objects.get(slug=item))
+        if parametr == 'plus':
+            good.quantity += 1
+            good.save()
+        elif parametr == 'minus':
+            if good.quantity == 1:
+                good.delete()
+            else:
+                good.quantity -= 1
+                good.save()
+        elif parametr == 'delete':
+            good.delete()
 
     return render(request, template, content)
 
