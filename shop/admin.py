@@ -12,6 +12,7 @@ class RelationshipInlineType(admin.TabularInline):
 @admin.register(TypeGood)
 class TypeAdmin(admin.ModelAdmin):
     """Администрирование разделов"""
+    ...
 
 
 @admin.register(Good)
