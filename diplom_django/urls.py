@@ -19,8 +19,11 @@ from django.urls import path, include
 from django.conf import settings
 from django.conf.urls.static import static
 
-from shop.views import main_page, cart, empty_section, phone, feedback, add_to_cart, registration, order, \
-    gadgets
+from shop.views import main_page, empty_section, registration
+from cart.views import add_to_cart, cart
+from order.views import order
+from feedback.views import feedback
+from gadgets.views import phone, gadgets
 
 urlpatterns = [
                   path(r'admin/', admin.site.urls),

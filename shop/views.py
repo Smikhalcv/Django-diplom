@@ -8,13 +8,13 @@ from django.urls import reverse
 from django.contrib.auth import authenticate, get_user_model, login
 
 # Create your views here.
-from shop.form import ScoreForm, FormCreateUser
-from shop.models import Good, Article, Score, User, RelationshipUser, Order, RelationshipOrder, TypeGood
+from feedback.forms import ScoreForm
+from shop.form import FormCreateUser
+from shop.models import Good, Article, TypeGood
 
 
 COUNT_GOOD_MAIN_PAGE = 6
-COUNT_GADGETS_GADGET_PAGE = 20
-COUNT_REVIEW_ABOUT_GOOD = 5
+
 
 
 def main_page(request):
@@ -30,38 +30,6 @@ def main_page(request):
         'articles': articles,
         'gadgets': gadgets,
     }
-    return render(request, template, content)
-
-
-def cart(request):
-    """Сортирует товары в корзине по дате добавления,
-    дата обновлется если увеличивать количество штук товара в другом представлении"""
-    gadgets = TypeGood.objects.all()
-    content = {
-        'gadgets': gadgets,
-    }
-    if not request.user.is_authenticated:
-        return redirect(reverse('login'))
-    else:
-        user = User.objects.get(username=request.user)
-        template = 'cart.html'
-        content['goods_in_cart'] = user.relationshipuser_set.all().order_by('-date_add_cart')
-    parametr = request.GET.get('parametr')
-    item = request.GET.get('item')
-    if parametr and item:
-        good = RelationshipUser.objects.get(user=user, good=Good.objects.get(slug=item))
-        if parametr == 'plus':
-            good.quantity += 1
-            good.save()
-        elif parametr == 'minus':
-            if good.quantity == 1:
-                good.delete()
-            else:
-                good.quantity -= 1
-                good.save()
-        elif parametr == 'delete':
-            good.delete()
-
     return render(request, template, content)
 
 
@@ -106,44 +74,6 @@ def phone(request, slug):
     return render(request, template, context)
 
 
-def feedback(request, slug):
-    """Промежуточное представление, которое создаёт инстанс модели
-    отзыва в БД из пост запроса и перенаправляет на страницу телефона"""
-    product = get_object_or_404(Good, slug=slug)
-    if request.method == 'POST':
-        form = ScoreForm(request.POST)
-        if form.is_valid():
-            cleaned_data = form.cleaned_data
-            review = Score.objects.create(
-                name=cleaned_data['name'],
-                review=cleaned_data['review'],
-                star=cleaned_data['star']
-            )
-            product.review.add(review)
-
-    return redirect(reverse('phone', args=[slug]))
-
-
-def add_to_cart(request, slug):
-    """Промежуточное представление, создаёт инстанс связи между товаром и пользователем
-    Если товар добавлен ещё раз обновляется дата добавления и увеличивается количествоединиц товара
-    Если пользователь не авторизован, его перекинет на страницу авторизации"""
-    if not request.user.is_authenticated:
-        return redirect(reverse('login'))
-    else:
-        if request.method == 'POST':
-            good = Good.objects.get(slug=slug)
-            user = User.objects.get(username=request.user)
-            if good in user.cart.all():
-                relationship = RelationshipUser.objects.get(good=good, user=user)
-                relationship.quantity += 1
-                relationship.date_add_cart = datetime.now()
-                relationship.save()
-            else:
-                user.cart.add(good)
-    return redirect(reverse('main'))
-
-
 def registration(request):
     """Создаёт инстанс пользователя при регистрации
     в случаи успешной регистрации перенаправляет на главную страницу"""
@@ -183,22 +113,3 @@ def registration(request):
                 return render(request, template, context)
     else:
         return render(request, template, context)
-
-
-def order(request, id):
-    """Создаёт заказ из корзины и очищает её"""
-    user = User.objects.get(id=id)
-    order = Order.objects.create(name_user=user.username, id_user=user.id)
-    list_goods = user.cart.all()
-    for good in list_goods:
-        rel_user = RelationshipUser.objects.get(good=good, user=user)
-        rel = RelationshipOrder.objects.create(
-            good=good,
-            order=order,
-            quantity=rel_user.quantity
-        )
-        order.amount_goods += rel_user.quantity
-        rel_user.delete()
-    order.save()
-    messages.success(request, 'Заказ оформлен!')
-    return redirect(reverse('main'))
