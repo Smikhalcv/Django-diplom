@@ -22,13 +22,13 @@
           </div>
           <span class="text-muted">{{item.quantity}}</span>
           <div style="display: flex; flex-direction:column;">
-            <a href="{% url 'cart' %}?parametr=plus&item={{item.good.slug}}">
+            <a title="Добавит единицу товара" href="{% url 'cart' %}?parametr=plus&item={{item.good.slug}}">
               <img src="{% static 'media/plus.jpg' %}" width="30" height="30">
             </a>
-            <a href="{% url 'cart' %}?parametr=minus&item={{item.good.slug}}">
+            <a title="Удалит единицу товар" href="{% url 'cart' %}?parametr=minus&item={{item.good.slug}}">
               <img src="{% static 'media/minus.jpg' %}" width="30" height="30">
             </a>
-            <a href="{% url 'cart' %}?parametr=delete&item={{item.good.slug}}">
+            <a title="Удалит товар из корзины" href="{% url 'cart' %}?parametr=delete&item={{item.good.slug}}">
               <img src="{% static 'media/X.jpg' %}" width="30" height="30">
             </a>
           </div>
