@@ -4,7 +4,8 @@ from django.shortcuts import render, get_object_or_404, redirect
 from django.urls import reverse
 
 from feedback.forms import ScoreForm
-from shop.models import Good, Score
+from feedback.models import Score
+from shop.models import Good
 
 
 def feedback(request, slug):

@@ -24,6 +24,7 @@ def gadgets(request, id):
     }
     return render(request, template, content)
 
+
 def phone(request, slug):
     """Выводит телефон и его описание, 5 самых лучших отзывов"""
     template = 'phone.html'

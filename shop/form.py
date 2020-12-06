@@ -2,8 +2,6 @@ from django import forms
 from django.contrib.auth import get_user_model
 from django.contrib.auth import forms as base_forms
 
-from shop.models import Score
-
 User = get_user_model()
 
 

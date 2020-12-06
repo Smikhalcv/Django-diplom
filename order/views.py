@@ -4,7 +4,8 @@ from django.shortcuts import redirect
 # Create your views here.
 from django.urls import reverse
 
-from shop.models import User, Order, RelationshipUser, RelationshipOrder
+from order.models import Order, RelationshipOrder
+from shop.models import User, RelationshipUser
 
 
 def order(request, id):

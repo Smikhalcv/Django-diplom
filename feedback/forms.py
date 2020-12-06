@@ -1,6 +1,6 @@
 from django import forms
 
-from shop.models import Score
+from feedback.models import Score
 
 
 class ScoreForm(forms.Form):

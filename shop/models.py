@@ -1,8 +1,9 @@
 from django.db import models
 from django.contrib.auth.models import AbstractUser
+from django.utils.text import slugify
+
 
 # Create your models here.
-from django.utils.text import slugify
 
 
 class TypeGood(models.Model):
@@ -51,25 +52,6 @@ class Good(models.Model):
         verbose_name_plural = 'Товары'
 
 
-class Score(models.Model):
-    """Модель отзыва о товаре"""  # счётчик звёздочек для товара
-    STAR_CHOICES = [
-        (5, '★★★★★'),
-        (4, '★★★★'),
-        (3, '★★★'),
-        (2, '★★'),
-        (1, '★'),
-    ]
-    name = models.CharField(max_length=100)
-    review = models.CharField(max_length=100)
-    star = models.IntegerField(choices=STAR_CHOICES)
-    good = models.ManyToManyField(
-        Good,
-        related_name='review',
-        through='RelationshipScore',
-    )
-
-
 class Article(models.Model):
     """Статья на главное странице с привязкой товара"""
     title = models.CharField(max_length=100, verbose_name='Заголовок')
@@ -113,41 +95,9 @@ class RelationshipUser(models.Model):
     quantity = models.IntegerField(default=1)
 
 
-class RelationshipScore(models.Model):
-    score = models.ForeignKey(Score, on_delete=models.CASCADE)
-    good = models.ForeignKey(Good, on_delete=models.CASCADE)
-
-
 class RelationshipArticle(models.Model):
     article = models.ForeignKey(Article, on_delete=models.CASCADE)
     good = models.ForeignKey(Good, on_delete=models.CASCADE)
-
-
-class Order(models.Model):
-    """Модель заказов"""
-    date = models.DateTimeField(auto_now_add=True)
-    name_user = models.CharField(max_length=64, verbose_name='Имя заказчика')
-    id_user = models.IntegerField()
-    amount_goods = models.IntegerField(verbose_name='Количество товара', default=0)
-    list_goods = models.ManyToManyField(
-        Good,
-        related_name='order',
-        through='RelationshipOrder'
-    )
-
-    class Meta:
-        verbose_name = 'Заказ'
-        verbose_name_plural = 'Заказы'
-
-    def __str__(self):
-        return self.name_user
-
-
-class RelationshipOrder(models.Model):
-    """Связь модели заказов и товаров для указание количества единиц товара"""
-    order = models.ForeignKey(Order, on_delete=models.CASCADE)
-    good = models.ForeignKey(Good, on_delete=models.CASCADE)
-    quantity = models.IntegerField(default=1)
 
 
 class RelationshipType(models.Model):

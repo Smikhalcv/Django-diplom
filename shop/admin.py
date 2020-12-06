@@ -1,5 +1,6 @@
 from django.contrib import admin
-from shop.models import Good, User, Article, RelationshipUser, Order, RelationshipOrder, RelationshipType, TypeGood
+
+from shop.models import Good, User, Article, RelationshipUser, TypeGood, RelationshipType
 
 
 # from django.contrib.admin.
@@ -38,20 +39,6 @@ class UserAdmin(admin.ModelAdmin):
     """Администрирование пользователя"""
     inlines = [
         RelationshipInline
-    ]
-
-
-class RelationshipInlineOrder(admin.TabularInline):
-    model = RelationshipOrder
-
-
-@admin.register(Order)
-class OrderAdmin(admin.ModelAdmin):
-    """Администрирование заказов"""
-    ordering = ('-date',)
-    list_display = ('name_user', 'amount_goods',)
-    inlines = [
-        RelationshipInlineOrder
     ]
 
 

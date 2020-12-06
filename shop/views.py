@@ -2,19 +2,15 @@ from datetime import datetime
 import random
 
 from django.contrib import messages
-from django.core.paginator import Paginator
-from django.shortcuts import render, redirect, get_object_or_404
+from django.shortcuts import render, redirect
 from django.urls import reverse
 from django.contrib.auth import authenticate, get_user_model, login
 
 # Create your views here.
-from feedback.forms import ScoreForm
 from shop.form import FormCreateUser
 from shop.models import Good, Article, TypeGood
 
-
 COUNT_GOOD_MAIN_PAGE = 6
-
 
 
 def main_page(request):
@@ -33,22 +29,6 @@ def main_page(request):
     return render(request, template, content)
 
 
-def gadgets(request, id):
-    """Отображает все товары указанного типа"""
-    template = 'smartphones.html'
-    gadgets = TypeGood.objects.all()
-    type_gadget = get_object_or_404(TypeGood, id=id)
-    smartphones = list(type_gadget.goods.all())
-    paginator = Paginator(smartphones, COUNT_GADGETS_GADGET_PAGE)
-    page = request.GET.get('page')
-    list_smartphones = paginator.get_page(page)
-    content = {
-        'smartphones': list_smartphones,
-        'gadgets': gadgets,
-    }
-    return render(request, template, content)
-
-
 def empty_section(request):
     template = 'empty_section.html'
     gadgets = TypeGood.objects.all()
@@ -56,22 +36,6 @@ def empty_section(request):
         'gadgets': gadgets,
     }
     return render(request, template, content)
-
-
-def phone(request, slug):
-    """Выводит телефон и его описание, 5 самых лучших отзывов"""
-    template = 'phone.html'
-    gadgets = TypeGood.objects.all()
-    phone = Good.objects.get(slug=slug)
-    reviews = phone.review.all().order_by('-star')
-    form = ScoreForm()
-    context = {
-        'phone_in_shop': phone,
-        'form': form,
-        'reviews': reviews[:COUNT_REVIEW_ABOUT_GOOD],
-        'gadgets': gadgets,
-    }
-    return render(request, template, context)
 
 
 def registration(request):
